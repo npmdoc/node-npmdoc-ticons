@@ -1,4 +1,7 @@
-# api documentation for  [ticons (v0.23.1)](https://github.com/fokkezb/ticons-cli)  [![npm package](https://img.shields.io/npm/v/npmdoc-ticons.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-ticons) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-ticons.svg)](https://travis-ci.org/npmdoc/node-npmdoc-ticons)
+# npmdoc-ticons
+
+#### api documentation for  [ticons (v0.23.1)](https://github.com/fokkezb/ticons-cli)  [![npm package](https://img.shields.io/npm/v/npmdoc-ticons.svg?style=flat-square)](https://www.npmjs.org/package/npmdoc-ticons) [![travis-ci.org build-status](https://api.travis-ci.org/npmdoc/node-npmdoc-ticons.svg)](https://travis-ci.org/npmdoc/node-npmdoc-ticons)
+
 #### Generate Titanium & Alloy icons, splash and other assets
 
 [![NPM](https://nodei.co/npm/ticons.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/ticons)
