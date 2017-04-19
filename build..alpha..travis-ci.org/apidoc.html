@@ -72,15 +72,6 @@
 
         <li>
 
-            <a class="apidocElementLiA" href="#apidoc.element.ticons.config">
-            function <span class="apidocSignatureSpan">ticons.</span>config
-            <span class="apidocSignatureSpan">(opts, callback)</span>
-            </a>
-
-        </li>
-
-        <li>
-
             <a class="apidocElementLiA" href="#apidoc.element.ticons.icons">
             function <span class="apidocSignatureSpan">ticons.</span>icons
             <span class="apidocSignatureSpan">(opts, callback)</span>
@@ -112,45 +103,6 @@
         <li>
 
             <span class="apidocSignatureSpan">object <span class="apidocSignatureSpan">ticons.</span>utils</span>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.ticons.assets">module ticons.assets</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.ticons.assets.assets">
-            function <span class="apidocSignatureSpan">ticons.</span>assets
-            <span class="apidocSignatureSpan">(opts, callback)</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.ticons.config">module ticons.config</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.ticons.config.config">
-            function <span class="apidocSignatureSpan">ticons.</span>config
-            <span class="apidocSignatureSpan">(opts, callback)</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.ticons.icons">module ticons.icons</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.ticons.icons.icons">
-            function <span class="apidocSignatureSpan">ticons.</span>icons
-            <span class="apidocSignatureSpan">(opts, callback)</span>
-            </a>
 
         </li>
 
@@ -257,19 +209,6 @@
             <a class="apidocElementLiA" href="#apidoc.element.ticons.logger.warn">
             function <span class="apidocSignatureSpan">ticons.logger.</span>warn
             <span class="apidocSignatureSpan">(msg)</span>
-            </a>
-
-        </li>
-
-    </ol></li>
-
-    <li class="apidocModuleLi"><a href="#apidoc.module.ticons.splashes">module ticons.splashes</a><ol>
-
-        <li>
-
-            <a class="apidocElementLiA" href="#apidoc.element.ticons.splashes.splashes">
-            function <span class="apidocSignatureSpan">ticons.</span>splashes
-            <span class="apidocSignatureSpan">(opts, callback)</span>
             </a>
 
         </li>
@@ -447,195 +386,23 @@
 
           if (spec.suffix) {
             targ ...</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
+    <li>example usage<pre class="apidocCodePre">...
+	notifier.update &#x26;&#x26; notifier.notify();
 
+	var options = _filterOptions(env);
 
+	options.cli = true;
+	options.input = input;
 
-    <h2>
-        <a href="#apidoc.element.ticons.config" id="apidoc.element.ticons.config">
-        function <span class="apidocSignatureSpan">ticons.</span>config
-        <span class="apidocSignatureSpan">(opts, callback)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function config(opts, callback) {
-  opts = opts || {};
-
-  // already done
-  if (opts &#x26;&#x26; opts.__cfg) {
-    return callback(null, opts);
-  }
-
-  // convert negatives (already done by CLI, but not vor module)
-  if (opts.noFix) {
-    opts.fix = false;
-    delete opts.noFix;
-  }
-  if (opts.noNine) {
-    opts.nine = false;
-    delete opts.noNine;
-  }
-  if (opts.noCrop) {
-    opts.crop = false;
-    delete opts.noCrop;
-  }
-
-  var cfg = _.extend({
-    __cfg: true,
-    type: undefined,
-    cli: false,
-    input: undefined,
-    platforms: undefined,
-    radius: 0,
-    sdkVersion: undefined,
-    locale: undefined,
-    minDpi: constants.dpi.mdpi,
-    maxDpi: constants.dpi.xxxhdpi,
-    origDpi: undefined,
-    orientation: undefined,
-    fix: true,
-    nine: true,
-    crop: true,
-    label: false,
-    outputDir: undefined,
-    assetsDir: undefined,
-    platformDir: undefined,
-    i18nDir: undefined,
-    storyboard: false,
-    alloy: undefined,
-    trace: false,
-    inputWidth: undefined,
-    inputHeight: undefined,
-    inputRatio: undefined,
-    alloyBase: &#x27;app&#x27;
-  }, opts);
-
-  var isProject = false,
-    isWidget = false,
-    tiappxml;
-
-  async.series({
-
-    radius: function (next) {
-
-      if (cfg.radius !== 0) {
-        cfg.radius = parseInt(cfg.radius, 10);
-
-        if (cfg.radius &#x3c; 0 || cfg.radius &#x3e; 50) {
-          return next(&#x27;The `radius` percentage should be between 0 and 50.&#x27;);
-        }
-      }
-
-      next();
-    },
-
-    outputDir: function (next) {
-      var manualOutput = false;
-
-      if (!cfg.outputDir) {
-        cfg.outputDir = process.cwd();
-
-      } else {
-        manualOutput = true;
-      }
-
-      // We are inside Resources
-      if (path.basename(cfg.outputDir) === &#x27;Resources&#x27;) {
-
-        // go up one level
-        cfg.outputDir = path.dirname(cfg.outputDir);
-        cfg.assetsDir = &#x27;Resources&#x27;;
-
-      } else if (path.basename(cfg.outputDir) === &#x27;assets&#x27;) {
-
-        // go up one level
-        cfg.outputDir = path.dirname(cfg.outputDir);
-        cfg.assetsDir = &#x27;assets&#x27;;
-
-        // we are not under a widget
-        if (!fs.existsSync(path.join(cfg.outputDir, &#x27;widget.json&#x27;))) {
-
-          // go up one more level
-          cfg.assetsDir = path.join(path.basename(cfg.outputDir), cfg.assetsDir);
-          cfg.outputDir = path.dirname(cfg.outputDir);
-        }
-
-        cfg.alloy = true;
-      }
-
-      fs.exists(path.join(cfg.outputDir, &#x27;tiapp.xml&#x27;), function (exists) {
-
-        if (exists) {
-          isProject = true;
-          return next();
-        }
-
-        fs.exists(path.join(cfg.outputDir, &#x27;widget.json&#x27;), function (exists) {
-
-          if (!exists) {
-
-            if (!manualOutput) {
-              return next(&#x27;Either specify `outputDir` or run in a project root&#x27;);
-
-            } else {
-              return next();
-            }
-          }
-
-          isWidget = true;
-
-          if (cfg.type !== &#x27;asset&#x27;) {
-            return next(&#x27;You can only target a widget using the `assets` command.&#x27;);
-          }
-
-          return next();
-        });
-
-      });
-    },
-
-    alloy: function (next) {
-
-      if (cfg.alloy !== undefined) {
-        return next();
-      }
-
-      fs.exists(path.join(cfg.outputDir, cfg.alloyBase, &#x27;controllers&#x27;, &#x27;index.js&#x27;), function (exists) {
-        cfg.alloy = exists;
-
-        next();
-      });
-    },
-
-    assetsDir: function (next) {
-
-      // set assetsDir
-      if (!cfg.assetsDir) {
-        if (isWidget) {
-          cfg.assetsDir = &#x27;assets&#x27;;
-        } else if (cfg.alloy) {
-          cfg.assetsDir = path.join(cfg.alloyBase, &#x27;assets&#x27;);
-        } else {
-          cfg.assetsDir = &#x27;Resources&#x27;;
-        }
-      }
-
-      next();
-    },
-
-    dpi: function (next) {
-
-      // convert dpi constants
-      cfg.minDpi = constants.dpi[cfg.minDpi] || parseInt(cfg.minDpi, 10);
-      cfg.maxDpi = constants.dpi[cfg.maxDpi] || parseInt(cfg.maxDpi, 10);
-      cfg.origDpi = (cfg.origDpi === undefined) ? undefined : (constants.dpi[cfg.origDpi] || parseInt(cfg.origDpi, 10));
-
-      var validDpi = _.values(constants.dpi);
-
-      if (validDpi.indexOf(cfg.minDpi) === -1) {
-        return next(&#x27;Invalid value `&#x27; + cfg.minDpi + &#x27; ...</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+	ticons.<span class="apidocCodeKeywordSpan">assets</span>(options, function (err, output) {
+		if (err) {
+			logger.error(err);
+		} else {
+			logger.ok(&#x27;Generated &#x27; + _.size(_.filter(output, _.identity)) + &#x27; assets&#x27;);
+		}
+	});
+}
+...</pre></li>
     </ul>
 
 
@@ -736,433 +503,30 @@ ticons.<span class="apidocCodeKeywordSpan">icons</span>({
   });
 
 }</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-
-
-
-
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.ticons.assets" id="apidoc.module.ticons.assets">module ticons.assets</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.ticons.assets.assets" id="apidoc.element.ticons.assets.assets">
-        function <span class="apidocSignatureSpan">ticons.</span>assets
-        <span class="apidocSignatureSpan">(opts, callback)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">assets = function (opts, callback) {
-  opts = opts || {};
-  opts.type = &#x27;asset&#x27;;
-
-  // config
-  config(opts, function(err, cfg) {
-
-    if (err) {
-      return callback(err);
-    }
-
-    var stat = fs.statSync(cfg.input);
-    var files = [];
-
-    var inputIsUnderOutput = cfg.input.indexOf(path.join(cfg.outputDir, cfg.assetsDir)) === 0;
-
-    jobs.getSpecs(cfg, function(err, specs) {
-      var outputSpecs = {};
-      var inputSpec;
-
-      _.each(specs, function(spec, name) {
-
-        if (!inputSpec) {
-          var re = new RegExp((spec.suffix || &#x27;&#x27;) + &#x27;\.(png|jpg)$&#x27;);
-
-          // if input is not under output
-          if (!inputIsUnderOutput) {
-
-            // and the user has specified dpi
-            if (cfg.origDpi) {
-
-              // and this spec matches
-              if (spec.dpi === cfg.origDpi) {
-                inputSpec = spec;
-              }
-
-            } else {
-
-              // if this spec has a suffix we can and do match
-              if (spec.suffix &#x26;&#x26; stat.isFile() &#x26;&#x26; cfg.input.match(re)) {
-                inputSpec = spec;
-              }
-            }
-
-            // since our input is not under ouput, we need to override the output path
-            if (inputSpec) {
-              inputSpec = _.defaults({
-                output: stat.isFile() ? path.dirname(cfg.input) : cfg.input
-              }, inputSpec);
-            }
-
-          } else {
-
-            // our input is under this specific spec path
-            if (cfg.input.substr(0, spec.output.length) === spec.output) {
-
-              // this spec has NO suffix we need to match as well
-              if (!spec.suffix) {
-                inputSpec = spec;
-                return; // skip this spec as output
-              }
-
-              // the input is a file
-              if (stat.isFile()) {
-
-                // which matches the suffix
-                if (cfg.input.match(re)) {
-                  inputSpec = spec;
-                  return; // skip this spec as output
-                }
-
-              } else {
-
-                // see if there are files under the path that match the suffix
-                var suffixFiles = fs.listFilesSync(cfg.input, {
-                  recursive: true,
-                  prependDir: true,
-                  filter: function(itemPath, itemStat) {
-                    return itemPath.match(re);
-                  }
-                });
-
-                // there are
-                if (suffixFiles.length &#x3e; 0) {
-                  inputSpec = spec;
-                  return; // skip this spec as output
-                }
-              }
-            }
-          }
-        }
-
-        // include this spec in the output
-        outputSpecs[name] = spec;
-      });
-
-      if (!inputSpec) {
-        return callback(&#x27;Could not identify input density.&#x27;);
-      }
-
-      if (outputSpecs[&#x27;android-res-mdpi&#x27;] &#x26;&#x26; outputSpecs[&#x27;ios-images&#x27;]) {
-        delete outputSpecs[&#x27;android-res-mdpi&#x27;];
-      }
-
-      if (stat.isDirectory()) {
-
-        files = fs.listFilesSync(cfg.input, {
-          recursive: true,
-          prependDir: true,
-          filter: function(itemPath, itemStat) {
-
-            // only filter on suffix if our input is in our output dir
-            return itemPath.match(new RegExp(((!inputIsUnderOutput || !inputSpec.suffix) ? &#x27;&#x27; : inputSpec.suffix) + &#x27;\.(png|jpg)$&#x27;));
-          }
-        });
-
-      } else {
-        files.push(cfg.input);
-      }
-
-      if (files.length === 0) {
-        return callback(&#x27;Could not find input images.&#x27;);
-      }
-
-      var tasks = [];
-
-      _.each(files, function(source) {
-        var sourceTime = fs.statSync(source).mtime;
-        var relativePath = source.substr(inputSpec.output.length);
-
-        // replace any suffixes from our source
-        relativePath = relativePath.replace(/(?:@[0-9]x|~[a-z]+)(\.[a-z]+)$/, &#x27;$1&#x27;);
-
-        _.each(outputSpecs, function(spec, n) {
-
-          if (spec.dpi &#x3e; inputSpec.dpi) {
-            logger.info(&#x27;Skipped higher dpi: &#x27; + spec.name.cyan);
-
-            return;
-          }
-
-          var target = path.join(spec.output, relativePath);
-
-          if (spec.suffix) {
-            targ ...</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.ticons.config" id="apidoc.module.ticons.config">module ticons.config</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.ticons.config.config" id="apidoc.element.ticons.config.config">
-        function <span class="apidocSignatureSpan">ticons.</span>config
-        <span class="apidocSignatureSpan">(opts, callback)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">function config(opts, callback) {
-  opts = opts || {};
-
-  // already done
-  if (opts &#x26;&#x26; opts.__cfg) {
-    return callback(null, opts);
-  }
-
-  // convert negatives (already done by CLI, but not vor module)
-  if (opts.noFix) {
-    opts.fix = false;
-    delete opts.noFix;
-  }
-  if (opts.noNine) {
-    opts.nine = false;
-    delete opts.noNine;
-  }
-  if (opts.noCrop) {
-    opts.crop = false;
-    delete opts.noCrop;
-  }
-
-  var cfg = _.extend({
-    __cfg: true,
-    type: undefined,
-    cli: false,
-    input: undefined,
-    platforms: undefined,
-    radius: 0,
-    sdkVersion: undefined,
-    locale: undefined,
-    minDpi: constants.dpi.mdpi,
-    maxDpi: constants.dpi.xxxhdpi,
-    origDpi: undefined,
-    orientation: undefined,
-    fix: true,
-    nine: true,
-    crop: true,
-    label: false,
-    outputDir: undefined,
-    assetsDir: undefined,
-    platformDir: undefined,
-    i18nDir: undefined,
-    storyboard: false,
-    alloy: undefined,
-    trace: false,
-    inputWidth: undefined,
-    inputHeight: undefined,
-    inputRatio: undefined,
-    alloyBase: &#x27;app&#x27;
-  }, opts);
-
-  var isProject = false,
-    isWidget = false,
-    tiappxml;
-
-  async.series({
-
-    radius: function (next) {
-
-      if (cfg.radius !== 0) {
-        cfg.radius = parseInt(cfg.radius, 10);
-
-        if (cfg.radius &#x3c; 0 || cfg.radius &#x3e; 50) {
-          return next(&#x27;The `radius` percentage should be between 0 and 50.&#x27;);
-        }
-      }
-
-      next();
-    },
-
-    outputDir: function (next) {
-      var manualOutput = false;
-
-      if (!cfg.outputDir) {
-        cfg.outputDir = process.cwd();
-
-      } else {
-        manualOutput = true;
-      }
-
-      // We are inside Resources
-      if (path.basename(cfg.outputDir) === &#x27;Resources&#x27;) {
-
-        // go up one level
-        cfg.outputDir = path.dirname(cfg.outputDir);
-        cfg.assetsDir = &#x27;Resources&#x27;;
-
-      } else if (path.basename(cfg.outputDir) === &#x27;assets&#x27;) {
-
-        // go up one level
-        cfg.outputDir = path.dirname(cfg.outputDir);
-        cfg.assetsDir = &#x27;assets&#x27;;
-
-        // we are not under a widget
-        if (!fs.existsSync(path.join(cfg.outputDir, &#x27;widget.json&#x27;))) {
-
-          // go up one more level
-          cfg.assetsDir = path.join(path.basename(cfg.outputDir), cfg.assetsDir);
-          cfg.outputDir = path.dirname(cfg.outputDir);
-        }
-
-        cfg.alloy = true;
-      }
-
-      fs.exists(path.join(cfg.outputDir, &#x27;tiapp.xml&#x27;), function (exists) {
-
-        if (exists) {
-          isProject = true;
-          return next();
-        }
-
-        fs.exists(path.join(cfg.outputDir, &#x27;widget.json&#x27;), function (exists) {
-
-          if (!exists) {
-
-            if (!manualOutput) {
-              return next(&#x27;Either specify `outputDir` or run in a project root&#x27;);
-
-            } else {
-              return next();
-            }
-          }
-
-          isWidget = true;
-
-          if (cfg.type !== &#x27;asset&#x27;) {
-            return next(&#x27;You can only target a widget using the `assets` command.&#x27;);
-          }
-
-          return next();
-        });
-
-      });
-    },
-
-    alloy: function (next) {
-
-      if (cfg.alloy !== undefined) {
-        return next();
-      }
-
-      fs.exists(path.join(cfg.outputDir, cfg.alloyBase, &#x27;controllers&#x27;, &#x27;index.js&#x27;), function (exists) {
-        cfg.alloy = exists;
-
-        next();
-      });
-    },
-
-    assetsDir: function (next) {
-
-      // set assetsDir
-      if (!cfg.assetsDir) {
-        if (isWidget) {
-          cfg.assetsDir = &#x27;assets&#x27;;
-        } else if (cfg.alloy) {
-          cfg.assetsDir = path.join(cfg.alloyBase, &#x27;assets&#x27;);
-        } else {
-          cfg.assetsDir = &#x27;Resources&#x27;;
-        }
-      }
-
-      next();
-    },
-
-    dpi: function (next) {
-
-      // convert dpi constants
-      cfg.minDpi = constants.dpi[cfg.minDpi] || parseInt(cfg.minDpi, 10);
-      cfg.maxDpi = constants.dpi[cfg.maxDpi] || parseInt(cfg.maxDpi, 10);
-      cfg.origDpi = (cfg.origDpi === undefined) ? undefined : (constants.dpi[cfg.origDpi] || parseInt(cfg.origDpi, 10));
-
-      var validDpi = _.values(constants.dpi);
-
-      if (validDpi.indexOf(cfg.minDpi) === -1) {
-        return next(&#x27;Invalid value `&#x27; + cfg.minDpi + &#x27; ...</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.ticons.icons" id="apidoc.module.ticons.icons">module ticons.icons</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.ticons.icons.icons" id="apidoc.element.ticons.icons.icons">
-        function <span class="apidocSignatureSpan">ticons.</span>icons
-        <span class="apidocSignatureSpan">(opts, callback)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">icons = function (opts, callback) {
-  opts = opts || {};
-  opts.type = &#x27;icon&#x27;;
-
-  // config
-  config(opts, function(err, cfg) {
-
-    if (err) {
-      return callback(err);
-    }
-
-    // create tasks
-    jobs.createTasks(cfg, function(err, tasks) {
-
-      if (err) {
-        return callback(err);
-      }
-
-      if (cfg.cli) {
-        logger.info(&#x27;Starting &#x27; + _.size(tasks) + &#x27; jobs&#x27;);
-      }
-
-      // run tasks
-      async.parallel(tasks, callback);
-
-    });
-
-  });
-
-}</pre></li>
     <li>example usage<pre class="apidocCodePre">...
+	notifier.update &#x26;&#x26; notifier.notify();
 
-### Module
-For the module use the full option names as properties in the first argument. Specify a callback that accepts an error and result
- as the second argument.
+	var options = _filterOptions(env);
 
-```
-var ticons = require(&#x27;ticons&#x27;);
+	options.cli = true;
+	options.input = input;
 
-ticons.<span class="apidocCodeKeywordSpan">icons</span>({
-	input: &#x27;icon.png&#x27;,
-	outputDir: &#x27;foo&#x27;,
-	platforms: [&#x27;ipad&#x27;,&#x27;android&#x27;],
-	classic: true
-}, function (err, output) {
-	
-	if (err) {
+	ticons.<span class="apidocCodeKeywordSpan">splashes</span>(options, function (err, output) {
+		if (err) {
+			logger.error(err);
+		} else {
+			logger.ok(&#x27;Generated &#x27; + _.size(_.filter(output, _.identity)) + &#x27; splashes&#x27;);
+		}
+	});
+}
 ...</pre></li>
     </ul>
+
+
+
+
+
+
 
 
 </div>
@@ -1605,7 +969,23 @@ if (err) {
 		console[settings.level || label](settings.color(&#x27;[&#x27; + label.toUpperCase() + &#x27;]&#x27;) + (label.length !== 5 ? (new Array(6 - label.
 length).join(&#x27; &#x27;)) : &#x27;&#x27;) + &#x27; &#x27; + msg);
 	}</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+	var options = _filterOptions(env);
+
+	options.cli = true;
+	options.input = input;
+
+	ticons.assets(options, function (err, output) {
+		if (err) {
+			logger.<span class="apidocCodeKeywordSpan">error</span>(err);
+		} else {
+			logger.ok(&#x27;Generated &#x27; + _.size(_.filter(output, _.identity)) + &#x27; assets&#x27;);
+		}
+	});
+}
+
+function icons(input, env) {
+...</pre></li>
     </ul>
 
 
@@ -1652,7 +1032,23 @@ jobs.createTasks(cfg, function(err, tasks) {
 		console[settings.level || label](settings.color(&#x27;[&#x27; + label.toUpperCase() + &#x27;]&#x27;) + (label.length !== 5 ? (new Array(6 - label.
 length).join(&#x27; &#x27;)) : &#x27;&#x27;) + &#x27; &#x27; + msg);
 	}</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+	options.cli = true;
+	options.input = input;
+
+	ticons.assets(options, function (err, output) {
+		if (err) {
+			logger.error(err);
+		} else {
+			logger.<span class="apidocCodeKeywordSpan">ok</span>(&#x27;Generated &#x27; + _.size(_.filter(output, _.identity)) + &#x27; assets
+&#x27;);
+		}
+	});
+}
+
+function icons(input, env) {
+	notifier.update &#x26;&#x26; notifier.notify();
+...</pre></li>
     </ul>
 
 
@@ -1701,53 +1097,6 @@ smallerHeight = Math.round(cfg.inputHeight * z);
 // width or height won&#x27;t cover specs anymore if content needs to fit as well
 if (smallerWidth &#x3c; spec.width || smallerHeight &#x3c; spec.height) {
 ...</pre></li>
-    </ul>
-
-
-</div>
-
-<div class="apidocSectionDiv">
-<h1><a href="#apidoc.module.ticons.splashes" id="apidoc.module.ticons.splashes">module ticons.splashes</a></h1>
-
-
-    <h2>
-        <a href="#apidoc.element.ticons.splashes.splashes" id="apidoc.element.ticons.splashes.splashes">
-        function <span class="apidocSignatureSpan">ticons.</span>splashes
-        <span class="apidocSignatureSpan">(opts, callback)</span>
-        </a>
-    </h2>
-    <ul>
-    <li>description and source-code<pre class="apidocCodePre">splashes = function (opts, callback) {
-  opts = opts || {};
-  opts.type = &#x27;splash&#x27;;
-
-  // config
-  config(opts, function(err, cfg) {
-
-    if (err) {
-      return callback(err);
-    }
-
-    // create tasks
-    jobs.createTasks(cfg, function(err, tasks) {
-
-      if (err) {
-        return callback(err);
-      }
-
-      if (cfg.cli) {
-        logger.info(&#x27;Starting &#x27; + _.size(tasks) + &#x27; jobs&#x27;);
-      }
-
-      // run tasks
-      async.parallel(tasks, callback);
-
-    });
-
-  });
-
-}</pre></li>
-    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
     </ul>
 
 
